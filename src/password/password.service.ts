@@ -6,13 +6,13 @@ import { Password, Prisma } from '@prisma/client'
 export class PasswordService {
   constructor(private prisma: PrismaService) { }
 
-  create(data: Prisma.PasswordCreateInput): Promise<Password> {
+  async create(data: Prisma.PasswordCreateInput): Promise<Password> {
     return this.prisma.password.create({
       data,
     });
   }
 
-  findAll(params: {
+  async findAll(params: {
     skip?: number;
     take?: number;
     cursor?: Prisma.PasswordWhereUniqueInput;
@@ -29,13 +29,24 @@ export class PasswordService {
     });
   }
 
-  findOne(passwordWhereUniqueInput: Prisma.PasswordWhereUniqueInput): Promise<Password | null> {
+  async findOne(passwordWhereUniqueInput: Prisma.PasswordWhereUniqueInput): Promise<Password | null> {
     return this.prisma.password.findUnique({
       where: passwordWhereUniqueInput
     });
   }
 
-  update(params: {
+  async findUnique(passwordWhereInput: Prisma.PasswordWhereInput): Promise<Password | null> {
+    return this.prisma.password.findFirst({
+      where: {
+        AND: [
+          { url: passwordWhereInput.url },
+          { username: passwordWhereInput.username }
+        ]
+      }
+    })
+  }
+
+  async update(params: {
     where: Prisma.PasswordWhereUniqueInput;
     data: Prisma.PasswordUpdateInput;
   }): Promise<Password> {
@@ -46,7 +57,7 @@ export class PasswordService {
     });
   }
 
-  remove(where: Prisma.PasswordWhereUniqueInput): Promise<Password> {
+  async remove(where: Prisma.PasswordWhereUniqueInput): Promise<Password> {
     return this.prisma.password.delete({
       where,
     });
