@@ -16,7 +16,7 @@ model User {
   lastName  String
   email     String    @unique
   password  String
-  token     String
+  token     String?
   passwords Password[]
   createdAt DateTime  @default(now())
 }
