@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFound
 import { Prisma, User as UserModel } from '@prisma/client';
 import { UserService } from './user.service';
 import { Response } from '../response.interface';
+import { UserData } from './user.interface';
 
 
 @Controller('user')
@@ -9,7 +10,7 @@ export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @Post()
-  async create(@Body() userData: { firstName?: string, lastName?: string, email: string, password: string }): Promise<Response<UserModel>> {
+  async create(@Body() userData: { firstName?: string, lastName?: string, email: string, password: string }): Promise<Response<UserData>> {
     // Unpack values from the userData object and assign them.
     const { firstName, lastName, email, password } = userData;
 
@@ -38,7 +39,7 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<Response<UserModel[]>> {
+  async findAll(): Promise<Response<UserData[]>> {
     // Query the database to find all users and store the result.
     const data = await this.userService.findAll({
       where: {}
@@ -52,27 +53,8 @@ export class UserController {
     }
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Response<UserModel | null>> {
-    // Query the database to find the user using their id and store the result.
-    const data = await this.userService.findOne(
-      { id: +id });
-
-    // Check if the result is null.
-    if (!data) {
-      throw new NotFoundException('User not found')
-    }
-
-    // Return the response.
-    return {
-      statusCode: HttpStatus.OK,
-      message: "User found successfully",
-      data: data,
-    }
-  }
-
-  @Get('')
-  async findEmail(@Query('email') email: string): Promise<Response<UserModel | null>> {
+  @Get('/byEmail')
+  async findEmail(@Query('email') email: string): Promise<Response<UserData | null>> {
     // Query the database to find the user using their email and store the result.
     const data = await this.userService.findOne(
       { email: email });
@@ -90,8 +72,27 @@ export class UserController {
     }
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Response<UserData | null>> {
+    // Query the database to find the user using their id and store the result.
+    const data = await this.userService.findOne(
+      { id: +id });
+
+    // Check if the result is null.
+    if (!data) {
+      throw new NotFoundException('User not found')
+    }
+
+    // Return the response.
+    return {
+      statusCode: HttpStatus.OK,
+      message: "User found successfully",
+      data: data,
+    }
+  }
+
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() userUpdateInput: Prisma.UserUpdateInput): Promise<Response<UserModel>> {
+  async update(@Param('id') id: string, @Body() userUpdateInput: Prisma.UserUpdateInput): Promise<Response<UserData>> {
     // Query the database to check if a user with that id is present.
     const userExists = await this.userService.findOne({ id: +id });
 
@@ -115,7 +116,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Response<UserModel>> {
+  async remove(@Param('id') id: string): Promise<Response<UserData>> {
     // Query the database to check if a user with that id is present.
     const userExists = await this.userService.findOne({ id: +id });
 
