@@ -42,15 +42,11 @@ export class UserService {
     return users;
   }
 
-  async findOne(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<UserData | null> {
-    const foundUser = await this.prisma.user.findUnique({
+  async findOne(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
-    if (foundUser) {
-      const { password, token, ...user } = foundUser;
-      return user;
-    }
-    return foundUser;
+    return user;
   }
 
   async update(params: {

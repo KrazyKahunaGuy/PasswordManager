@@ -64,11 +64,13 @@ export class UserController {
       throw new NotFoundException('User not found')
     }
 
+    const { password, token, ...user } = data;
+
     // Return the response.
     return {
       statusCode: HttpStatus.OK,
       message: "User found successfully",
-      data: data,
+      data: user,
     }
   }
 
@@ -83,11 +85,13 @@ export class UserController {
       throw new NotFoundException('User not found')
     }
 
+    const { password, token, ...user } = data;
+
     // Return the response.
     return {
       statusCode: HttpStatus.OK,
       message: "User found successfully",
-      data: data,
+      data: user,
     }
   }
 
