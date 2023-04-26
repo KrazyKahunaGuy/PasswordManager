@@ -79,4 +79,8 @@ export class UserService {
     const passwordHash = await bcrypt.hash(plainPassword, salt);
     return passwordHash;
   }
+
+  async checkPassword(plainPassword: string, encryptedPassword: string): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, encryptedPassword);
+  }
 }
