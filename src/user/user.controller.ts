@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException, ConflictException, Query } from '@nestjs/common';
-import { Prisma, User as UserModel } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UserService } from './user.service';
 import { Response } from '../response.interface';
 import { UserData } from './user.interface';
