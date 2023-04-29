@@ -1,14 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException, ConflictException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, NotFoundException, ConflictException, Query, HttpCode } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { UserService } from './user.service';
 import { Response } from '../response.interface';
 import { UserData } from './user.interface';
 
-
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(@Body() userData: { firstName?: string, lastName?: string, email: string, password: string }): Promise<Response<UserData>> {
     // Unpack values from the userData object and assign them.
@@ -38,6 +38,7 @@ export class UserController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   async findAll(): Promise<Response<UserData[]>> {
     // Query the database to find all users and store the result.
@@ -53,6 +54,7 @@ export class UserController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get('/byEmail')
   async findEmail(@Query('email') email: string): Promise<Response<UserData | null>> {
     // Query the database to find the user using their email and store the result.
@@ -74,6 +76,7 @@ export class UserController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Response<UserData | null>> {
     // Query the database to find the user using their id and store the result.
@@ -95,6 +98,7 @@ export class UserController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() userUpdateInput: Prisma.UserUpdateInput): Promise<Response<UserData>> {
     // Query the database to check if a user with that id is present.
@@ -119,6 +123,7 @@ export class UserController {
     }
   }
 
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Response<UserData>> {
     // Query the database to check if a user with that id is present.

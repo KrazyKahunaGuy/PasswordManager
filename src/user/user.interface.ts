@@ -3,5 +3,6 @@ export interface UserData {
     firstName?: string | null;
     lastName?: string | null;
     email: string;
+    role?: string;
     createdAt: Date;
 }
