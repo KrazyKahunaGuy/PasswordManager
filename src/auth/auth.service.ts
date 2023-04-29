@@ -12,7 +12,6 @@ export class AuthService {
     ) { }
 
     async signIn(email: string, plaintextPassword: string): Promise<any> {
-        const secretOrPrivateKey = constants.JWT_SECRET_KEY;
         const user = await this.userService.findOne({ email: email });
 
         if (user) {
@@ -25,11 +24,11 @@ export class AuthService {
                 email: user.email,
                 role: 'user',
                 iat: new Date().getTime(),
-                exp: +(new Date().getTime() + constants.JWT_EXPIRATION_TIME),
+                exp: Math.floor(((new Date().getTime() + Number(constants.JWT_EXPIRATION_TIME)))),
             };
 
             return {
-                access_token: await this.jwtService.signAsync(payload, { secret: secretOrPrivateKey}),
+                access_token: await this.jwtService.signAsync(payload),
             }
         }
 
