@@ -12,14 +12,6 @@ export class PasswordController {
     // Unpack values from the passwordData object and assign them.
     const { url, username, password, userId } = passwordData;
 
-    // Query the database to check if url and username is already in use.
-    const urlUsernameExists = await this.passwordService.findUnique({url, username});
-
-    // Check if the constant urlUsernameExists is null.
-    if (urlUsernameExists) {
-      throw new ConflictException('Login already exists')
-    }
-
     // Store the result from creating the user.
     const data = await this.passwordService.create({
       url,
@@ -59,11 +51,6 @@ export class PasswordController {
     const data = await this.passwordService.findOne(
       { id: +id });
 
-    // Check if the result is null.
-    if (!data) {
-      throw new NotFoundException('Password not found')
-    }
-
     // Return the response.
     return {
       statusCode: HttpStatus.CREATED,
@@ -74,14 +61,6 @@ export class PasswordController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() passwordUpdateInput: Prisma.PasswordUpdateInput): Promise<Response<PasswordModel>> {
-    // Query the database to check if a password with that id exists.
-    const passwordExists = await this.passwordService.findOne({ id: +id });
-
-    // Check if the constant passwordExists is null.
-    if (!passwordExists) {
-      throw new NotFoundException('Password not Found');
-    }
-
     // Query the database, then update the fields.
     const data = await this.passwordService.update({
       where: { id: +id },
@@ -98,14 +77,6 @@ export class PasswordController {
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Response<PasswordModel>> {
-    // Query the database to check if a password with that id exists.
-    const passwordExists = await this.passwordService.findOne({ id: +id });
-
-    // Check if the constant passwordExists is null.
-    if (!passwordExists) {
-      throw new NotFoundException('Password not Found');
-    }
-
     // Query the database, then delete the row.
     const data = await this.passwordService.remove({
       id: +id,
